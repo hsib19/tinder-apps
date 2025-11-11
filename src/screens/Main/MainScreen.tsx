@@ -1,25 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StatusBar } from "react-native";
+import ScreenContainer from "../../components/templates/ScreenContainer";
+import SwipeStoryDeck from "../../components/organism/SwipeStoryDeck";
+import { colors } from "../../theme";
 
-const MainScreen: React.FC = () => {
+const MainScreen = () => {
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Main Screen</Text>
-        </View>
+        <>
+            <StatusBar barStyle={'dark-content'} backgroundColor={colors.surface} />
+            <ScreenContainer>
+                <SwipeStoryDeck />
+            </ScreenContainer>
+        </>
     );
 };
 
 export default MainScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#fff",
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: "600",
-    },
-});

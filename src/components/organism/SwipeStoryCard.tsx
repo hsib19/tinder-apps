@@ -16,7 +16,10 @@ interface Props {
     onSwipeLeft: (id: string) => void;
     onSwipeRight: (id: string) => void;
     onRewind: () => void;
+    onSwipeUp: (id: string) => void;
+    onSwipeDown: (id: string) => void;
     isTopCard?: boolean; 
+    orientation?: "horizontal" | "vertical";
 }
 
 const SwipeStoryCard: React.FC<Props> = ({
@@ -24,7 +27,10 @@ const SwipeStoryCard: React.FC<Props> = ({
     onSwipeLeft,
     onSwipeRight,
     onRewind,
+    onSwipeUp,
+    onSwipeDown,
     isTopCard = true,
+    orientation = "horizontal",
 }) => {
 
     const {
@@ -35,13 +41,18 @@ const SwipeStoryCard: React.FC<Props> = ({
         rewind,
         swipeLeft,
         swipeRight,
+        swipeUp,    
+        swipeDown,  
     } = useSwipeCard({
         id: profile.id,
         images: profile.images,
         onSwipeLeft,
         onSwipeRight,
+        onSwipeUp,       
+        onSwipeDown,     
         onRewind,
         isTopCard,
+        orientation,     
     });
 
     return (
@@ -71,11 +82,27 @@ const SwipeStoryCard: React.FC<Props> = ({
                         </View>
                     </SwipeableImage>
             </View>
-                <CardActionBar onPress={(action) => {
-                    if (action === "rewind") rewind();
-                    if (action === "like") swipeRight();
-                    if (action === "dislike") swipeLeft();
-                }} style={styles.actionBar} />
+                <CardActionBar
+                    onPress={(action) => {
+                        if (action === "rewind") rewind();
+
+                        if (orientation === "horizontal") {
+                            if (action === "like") swipeRight();
+                            if (action === "dislike") swipeLeft(); 
+                        } else {
+                            if (action === "like") swipeUp();
+                            if (action === "dislike") swipeDown();
+                            if (action === "superlike") swipeUp(); 
+                            if (action === "boost") { } 
+                        }
+                    }}
+                    actions={
+                        orientation === "vertical"
+                            ? ["dislike"] 
+                            : ["rewind", "dislike", "superlike", "like", "boost"] 
+                    }
+                    style={styles.actionBar}
+                />
 
                 <View style={styles.bottomShadow} />
 

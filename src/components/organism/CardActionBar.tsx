@@ -15,9 +15,10 @@ interface ActionButton {
 interface Props {
     onPress?: (action: string) => void;
     style?: ViewStyle;
+    actions?: string[]; 
 }
 
-const CardActionBar: React.FC<Props> = ({ onPress, style }) => {
+const CardActionBar: React.FC<Props> = ({ onPress, style, actions }) => {
     const buttons: ActionButton[] = [
         { icon: "rotate-left", color: colors.grayDark, background: colors.surface, action: "rewind" },
         { icon: "xmark", color: colors.error, background: colors.surface, action: "dislike" },
@@ -26,10 +27,12 @@ const CardActionBar: React.FC<Props> = ({ onPress, style }) => {
         { icon: "bolt", color: colors.accent, background: colors.surface, action: "boost" },
     ];
 
+    const visibleButtons = actions ? buttons.filter((btn) => actions.includes(btn.action)) : buttons;
+
     return (
         <View style={[styles.container, style]}>
-            {buttons.map((btn, index) => {
-                const isLarge = index === 1 || index === 3;
+            {visibleButtons.map((btn, index) => {
+                const isLarge = btn.action === "dislike" || btn.action === "like"; 
                 const buttonStyle = isLarge ? styles.largeButton : styles.button;
                 const iconSize = isLarge ? 30 : 22;
 

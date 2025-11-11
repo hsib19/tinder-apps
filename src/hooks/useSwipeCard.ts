@@ -18,7 +18,10 @@ interface UseSwipeCardParams {
     isTopCard?: boolean;
     onSwipeLeft: (id: string) => void;
     onSwipeRight: (id: string) => void;
+    onSwipeUp?: (id: string) => void;     
+    onSwipeDown?: (id: string) => void; 
     onRewind: () => void;
+    orientation?: "horizontal" | "vertical";
 }
 
 export const useSwipeCard = ({
@@ -28,6 +31,9 @@ export const useSwipeCard = ({
     onSwipeLeft,
     onSwipeRight,
     onRewind,
+    onSwipeUp,
+    onSwipeDown,
+    orientation = "horizontal",
 }: UseSwipeCardParams) => {
     const translateX = useSharedValue(0);
     const translateY = useSharedValue(0);
@@ -79,19 +85,35 @@ export const useSwipeCard = ({
 
     const panGesture = Gesture.Pan()
         .onUpdate((event) => {
-            translateX.value = event.translationX;
-            translateY.value = 0;
-            rotate.value = event.translationX / 20;
+            if (orientation === "horizontal") {
+                translateX.value = event.translationX;
+                translateY.value = 0;
+                rotate.value = event.translationX / 20;
+            } else {
+                translateY.value = event.translationY;
+                translateX.value = 0;
+            }
         })
         .onEnd(() => {
-            if (translateX.value > SWIPE_THRESHOLD) {
-                scheduleOnRN(onSwipeRight, id);
-            } else if (translateX.value < -SWIPE_THRESHOLD) {
-                scheduleOnRN(onSwipeLeft, id);
+            if (orientation === "horizontal") {
+                if (translateX.value > SWIPE_THRESHOLD) {
+                    if (onSwipeRight) scheduleOnRN(onSwipeRight, id);
+                } else if (translateX.value < -SWIPE_THRESHOLD) {
+                    if (onSwipeLeft) scheduleOnRN(onSwipeLeft, id);
+                } else {
+                    resetPosition();
+                }
             } else {
-                resetPosition();
+                if (translateY.value < -SWIPE_THRESHOLD) {
+                    if (onSwipeUp) scheduleOnRN(onSwipeUp, id);
+                } else if (translateY.value > SWIPE_THRESHOLD) {
+                    if (onSwipeDown) scheduleOnRN(onSwipeDown, id);
+                } else {
+                    resetPosition();
+                }
             }
         });
+
 
     const tapLeft = Gesture.Tap().onEnd(() => {
         scheduleOnRN(() => {
@@ -125,6 +147,18 @@ export const useSwipeCard = ({
         scheduleOnRN(onSwipeLeft, id);
     };
 
+    const swipeUp = () => {
+        "worklet";
+        translateY.value = withSpring(-SCREEN_WIDTH);
+        if (onSwipeUp) scheduleOnRN(onSwipeUp, id);
+    };
+
+    const swipeDown = () => {
+        "worklet";
+        translateY.value = withSpring(SCREEN_WIDTH);
+        if (onSwipeDown) scheduleOnRN(onSwipeDown, id);
+    };
+
     const animatedStyle = useAnimatedStyle(() => ({
         transform: [
             { translateX: translateX.value },
@@ -143,5 +177,7 @@ export const useSwipeCard = ({
         rewind,
         swipeRight,
         swipeLeft,
+        swipeUp,
+        swipeDown
     };
 };

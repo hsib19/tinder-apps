@@ -19,6 +19,18 @@ export const useSwipeDeck = (initialProfiles: Profile[]) => {
         setProfiles((prev) => prev.filter((p) => p.id !== id));
     };
 
+    const handleSwipeUp = (id: string) => {
+        const swiped = profiles.find((p) => p.id === id);
+        if (swiped) setHistory((prev) => [swiped, ...prev]);
+        setProfiles((prev) => prev.filter((p) => p.id !== id));
+    };
+
+    const handleSwipeDown = (id: string) => {
+        const swiped = profiles.find((p) => p.id === id);
+        if (swiped) setHistory((prev) => [swiped, ...prev]);
+        setProfiles((prev) => prev.filter((p) => p.id !== id));
+    };
+
     const handleRewind = () => {
         if (history.length === 0) return;
         const [last, ...rest] = history;
@@ -32,6 +44,8 @@ export const useSwipeDeck = (initialProfiles: Profile[]) => {
         topProfile,
         handleSwipeLeft,
         handleSwipeRight,
+        handleSwipeUp,
+        handleSwipeDown,
         handleRewind,
     };
 };

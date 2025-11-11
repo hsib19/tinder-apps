@@ -9,7 +9,7 @@ const MainScreen = () => {
         <>
             <StatusBar barStyle={'dark-content'} backgroundColor={colors.surface} />
             <ScreenContainer>
-                <SwipeStoryDeck />
+                <SwipeStoryDeck orientation="horizontal" />
             </ScreenContainer>
         </>
     );

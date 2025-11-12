@@ -1,97 +1,122 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Tinder App - React Native
 
-# Getting Started
+A simple Tinder-like mobile app built with **React Native**, using **Zustand** for state management and **Atomic Design** for component structure.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+The app includes three main screens: **Splash Screen**, **Main Screen**, and **Like Screen**.
 
-## Step 1: Start Metro
+## Features
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+* **Splash Screen**: Shows a welcoming screen while the app loads.
+* **Main Screen**: Displays a stack of profiles to swipe left (dislike) or right (like).
+* **Like Screen**: Shows the list of profiles the user has liked.
+* **State Management**: Uses Zustand to manage profiles and swipe actions.
+* **Atomic Design**: Components structured in Atoms, Molecules, Organisms, Screens for better maintainability.
+* **Cross-platform**: Works on Android and iOS devices.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## Screens
 
-```sh
-# Using npm
+| Screen        | Description                                                            |
+| ------------- | ---------------------------------------------------------------------- |
+| Splash Screen | Appears on app launch with a welcome or loading animation.             |
+| Main Screen   | Displays a swipeable deck of profiles with interactive swipe gestures. |
+| Like Screen   | Shows profiles that the user has liked; can review or remove them.     |
+
+## Atomic Design Structure
+
+```
+src/
+├── components/
+│   ├── atoms/        # Smallest components, e.g., Button, Text, Avatar
+│   ├── molecules/    # Combinations of atoms, e.g., ProfileCard, SwipeButtons
+│   ├── organisms/    # Combinations of molecules, e.g., ProfileDeck
+│   └── screens/      # Complete screens: SplashScreen, MainScreen, LikeScreen
+├── store/            # Zustand store for state management
+├── utils/            # Helper functions
+├── App.tsx           # App entry point
+└── types/            # TypeScript interfaces
+```
+
+## State Management (Zustand)
+
+The app uses **Zustand** for global state management:
+
+```ts
+import { create } from "zustand";
+import { Profile } from "../types/profile";
+
+interface LikedState {
+    likedProfiles: Profile[];
+    addLiked: (profile: Profile) => void;
+    removeLiked: (id: string) => void;
+    clearLiked: () => void;
+}
+
+export const useLikedStore = create<LikedState>((set) => ({
+    likedProfiles: [],
+    addLiked: (profile) =>
+        set((state) => ({
+            likedProfiles: [...state.likedProfiles, profile],
+        })),
+    removeLiked: (id) =>
+        set((state) => ({
+            likedProfiles: state.likedProfiles.filter((p) => p.id !== id),
+        })),
+    clearLiked: () => set({ likedProfiles: [] }),
+}));
+
+```
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/hsib19/tinder_apps.git
+cd tinder_apps
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Start Metro bundler:
+
+```bash
 npm start
-
-# OR using Yarn
+# or
 yarn start
 ```
 
-## Step 2: Build and run your app
+4. Run on Android:
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+```bash
 npm run android
-
-# OR using Yarn
+# or
 yarn android
 ```
 
-### iOS
+5. Run on iOS:
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+```bash
 npm run ios
-
-# OR using Yarn
+# or
 yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+# Environment Variables for Tinder App
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+Create a `.env` file in the root of your project with the following variables:
 
-## Step 3: Modify your app
+```
+API_URL=https://your-api-url.com
+AUTH_TOKEN=your-auth-token
+```
 
-Now that you have successfully run the app, let's make changes!
+### Notes
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+* `API_URL`: The base URL of your backend API.
+* `AUTH_TOKEN`: Your authentication token for API requests.

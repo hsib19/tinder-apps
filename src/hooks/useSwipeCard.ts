@@ -8,13 +8,14 @@ import {
 } from "react-native-reanimated";
 import { Gesture } from "react-native-gesture-handler";
 import { scheduleOnRN } from "react-native-worklets";
+import { ProfilePictures } from "../types/profile";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
 
 interface UseSwipeCardParams {
     id: string;
-    images: string[];
+    pictures: ProfilePictures[];
     isTopCard?: boolean;
     onSwipeLeft: (id: string) => void;
     onSwipeRight: (id: string) => void;
@@ -26,7 +27,7 @@ interface UseSwipeCardParams {
 
 export const useSwipeCard = ({
     id,
-    images,
+    pictures,
     isTopCard = true,
     onSwipeLeft,
     onSwipeRight,
@@ -49,14 +50,14 @@ export const useSwipeCard = ({
         const interval = setInterval(() => {
             if (progress.value >= 1 && !progressDone.current) {
                 progressDone.current = true;
-                if (activeIndex < images.length - 1) {
+                if (activeIndex < pictures.length - 1) {
                     setActiveIndex((prev) => prev + 1);
                 }
             }
         }, 100);
 
         return () => clearInterval(interval);
-    }, [activeIndex, images.length, isTopCard]);
+    }, [activeIndex, pictures.length, isTopCard]);
 
     useEffect(() => {
         if (!isTopCard) return;
@@ -123,7 +124,7 @@ export const useSwipeCard = ({
 
     const tapRight = Gesture.Tap().onEnd(() => {
         scheduleOnRN(() => {
-            if (activeIndex < images.length - 1) setActiveIndex(activeIndex + 1);
+            if (activeIndex < pictures.length - 1) setActiveIndex(activeIndex + 1);
         });
     });
 

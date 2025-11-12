@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Profile } from "../types/profile";
+import { useLikedStore } from "../stores/likedStore";
 
 export const useSwipeDeck = (initialProfiles: Profile[]) => {
     const [profiles, setProfiles] = useState<Profile[]>(initialProfiles);
     const [history, setHistory] = useState<Profile[]>([]);
+    const addLiked = useLikedStore((state) => state.addLiked);
 
-    const topProfile = profiles[profiles.length - 1];
+    useEffect(() => {
+        setProfiles(initialProfiles);
+    }, [initialProfiles]);
+
+    const topProfile = profiles[profiles.length - 1]; 
 
     const handleSwipeLeft = (id: string) => {
         const swiped = profiles.find((p) => p.id === id);
@@ -15,7 +21,10 @@ export const useSwipeDeck = (initialProfiles: Profile[]) => {
 
     const handleSwipeRight = (id: string) => {
         const swiped = profiles.find((p) => p.id === id);
-        if (swiped) setHistory((prev) => [swiped, ...prev]);
+        if (swiped) {
+            setHistory((prev) => [swiped, ...prev]);
+            addLiked(swiped); 
+        }
         setProfiles((prev) => prev.filter((p) => p.id !== id));
     };
 

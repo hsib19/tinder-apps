@@ -45,7 +45,7 @@ const SwipeStoryCard: React.FC<Props> = ({
         swipeDown,  
     } = useSwipeCard({
         id: profile.id,
-        images: profile.images,
+        pictures: profile.pictures,
         onSwipeLeft,
         onSwipeRight,
         onSwipeUp,       
@@ -69,7 +69,7 @@ const SwipeStoryCard: React.FC<Props> = ({
                 </View> */}
 
                     <SwipeableImage
-                        images={profile.images}
+                        pictures={profile.pictures}
                         activeIndex={activeIndex}
                         progress={progress}
                     >

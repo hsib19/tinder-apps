@@ -21,6 +21,8 @@ The app includes three main screens: **Splash Screen**, **Main Screen**, and **L
 | Main Screen   | Displays a swipeable deck of profiles with interactive swipe gestures. |
 | Like Screen   | Shows profiles that the user has liked; can review or remove them.     |
 
+## [Demo App](https://drive.google.com/file/d/1vgEyvaVoT7oIRaimWRdpd2ORhlcw-1jc/view?usp=sharing)
+
 ## Atomic Design Structure
 
 ```

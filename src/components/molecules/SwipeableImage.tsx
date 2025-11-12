@@ -4,21 +4,22 @@ import { SharedValue } from "react-native-reanimated";
 import ProfileImage from "../atoms/ProfileImage";
 import OverlayGradient from "../atoms/OverlayGradient";
 import StoryProgressBar from "./StoryProgressBar";
+import { ProfilePictures } from "../../types/profile";
 
 interface Props {
-    images: string[];
+    pictures: ProfilePictures[];
     activeIndex: number;
     progress: SharedValue<number>;
     children?: React.ReactNode; 
 }
 
-const SwipeableImage: React.FC<Props> = ({ images, activeIndex, progress, children }) => {
-    const safeIndex = Math.max(0, Math.min(activeIndex, images.length - 1));
+const SwipeableImage: React.FC<Props> = ({ pictures, activeIndex, progress, children }) => {
+    const safeIndex = Math.max(0, Math.min(activeIndex, pictures.length - 1));
 
     return (
         <View style={styles.container}>
-            <ProfileImage uri={images[safeIndex]} />
-            <StoryProgressBar count={images.length} activeIndex={activeIndex} progress={progress} />
+            <ProfileImage uri={pictures[safeIndex].url} />
+            <StoryProgressBar count={pictures.length} activeIndex={activeIndex} progress={progress} />
             <OverlayGradient>
                 <View style={styles.overlay}>{children}</View>
             </OverlayGradient>

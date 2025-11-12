@@ -3,16 +3,20 @@ import { StatusBar } from "react-native";
 import ScreenContainer from "../../components/templates/ScreenContainer";
 import SwipeStoryDeck from "../../components/organism/SwipeStoryDeck";
 import { colors } from "../../theme";
+import { useLikedStore } from "../../stores/likedStore";
 
-const MainScreen = () => {
+const LikeOpponentsScreen = () => {
+
+    const likedProfiles = useLikedStore((state) => state.likedProfiles);
+
     return (
         <>
-            <StatusBar barStyle={'dark-content'} backgroundColor={colors.surface} />
+            <StatusBar barStyle={"dark-content"} backgroundColor={colors.surface} />
             <ScreenContainer>
-                <SwipeStoryDeck orientation="vertical" />
+                <SwipeStoryDeck profiles={likedProfiles} orientation="vertical" />
             </ScreenContainer>
         </>
     );
 };
 
-export default MainScreen;
+export default LikeOpponentsScreen;
